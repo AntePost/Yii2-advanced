@@ -17,6 +17,8 @@ class m200112_100138_create_tasks_table extends Migration
             'name' => $this->string()->notNull(),
             'description' => $this->string(),
             'status' => $this->integer(),
+            'author_id' => $this->integer()->notNull(),
+            'user_responsible_id' => $this->integer()->notNull(),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
         ]);
