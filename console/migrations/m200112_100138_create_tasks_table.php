@@ -16,9 +16,12 @@ class m200112_100138_create_tasks_table extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull(),
             'description' => $this->string(),
-            'status' => $this->integer(),
+            'status' => $this->tinyInteger(),
+            'priority_id' => $this->tinyInteger(),
             'author_id' => $this->integer()->notNull(),
             'user_responsible_id' => $this->integer()->notNull(),
+            'is_template' => $this->boolean()->notNull(),
+            'template_id' => $this->integer(),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
         ]);

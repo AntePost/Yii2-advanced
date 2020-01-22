@@ -32,11 +32,23 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'name',
             'description',
-            'status',
             'author_id',
             'user_responsible_id',
-            'created_at',
-            'updated_at',
+            [
+                'label' => 'Priority',
+                'value' => function ($model) {
+                    return $model->priority_id;
+                },
+            ],
+            [
+                'attribute'=>'status',
+                'value'=>function(\frontend\models\Task $model) {
+                    return \frontend\models\Task::getStatusName()[$model->status];
+                }
+            ],
+            'created_at:datetime',
+            'updated_at:datetime',
+            'is_template:boolean'
         ],
     ]) ?>
 

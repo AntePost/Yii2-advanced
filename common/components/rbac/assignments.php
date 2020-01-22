@@ -15,4 +15,7 @@ return [
     6 => [
         'author',
     ],
+    1 => [
+        'author',
+    ],
 ];
