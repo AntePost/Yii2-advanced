@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use frontend\models\ChatLog;
 
 /**
  * MyTasksController implements the CRUD actions for Task model.
@@ -70,8 +71,16 @@ class MyTasksController extends Controller
     public function actionCreate()
     {
         $model = new Task();
+        $chatModel = new ChatLog();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $dataForMessage = [
+                'username' => 'Service announcement',
+                'message' => "Task '{$model->name}' with ID {$model->id} was created successfully",
+                'type' => 2,
+                'task_id' => $model->id,
+            ];
+            $chatModel->create($dataForMessage);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -101,6 +110,7 @@ class MyTasksController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'templates'=>[],
         ]);
     }
 
