@@ -9,6 +9,7 @@ use frontend\models\search\MyTasksSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use frontend\models\ChatLog;
 
 /**
  * ProjectController implements the CRUD actions for Project model.
@@ -72,8 +73,16 @@ class ProjectController extends Controller
     public function actionCreate()
     {
         $model = new Project();
+        $chatModel = new ChatLog();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $dataForMessage = [
+                'username' => 'Service announcement',
+                'message' => "Project '{$model->title}' with ID {$model->id} was created successfully",
+                'type' => 2,
+                'project_id' => $model->id,
+            ];
+            $chatModel->create($dataForMessage);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
