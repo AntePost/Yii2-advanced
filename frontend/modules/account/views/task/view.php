@@ -26,40 +26,22 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 
-    <p>
-        <?php if (!$isSubscribed) { ?>
-            <?= Html::a('Subscribe', ['subscribe', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?php } else { ?>
-            <?= Html::a('Unsubscribe', ['unsubscribe', 'id' => $model->id], ['class' => 'btn btn-danger']) ?>
-        <?php } ?>
-    </p>
-
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
             'name',
             'description',
+            'status',
+            'priority_id',
             'author_id',
             'user_responsible_id',
-            [
-                'label' => 'Priority',
-                'value' => function ($model) {
-                    return $model->priority_id;
-                },
-            ],
-            [
-                'attribute'=>'status',
-                'value'=>function(\frontend\models\Task $model) {
-                    return \frontend\models\Task::getStatusName()[$model->status];
-                }
-            ],
-            'created_at:datetime',
-            'updated_at:datetime',
-            'is_template:boolean'
+            'is_template',
+            'template_id',
+            'created_at',
+            'updated_at',
+            'project_id',
         ],
     ]) ?>
 
 </div>
-
-<?= \frontend\widgets\chat\Chat::widget(['task_id' => $model->id]) ?>

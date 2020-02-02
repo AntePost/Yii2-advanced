@@ -1,22 +1,19 @@
 <?php
 
-namespace frontend\controllers;
+namespace frontend\modules\account\controllers;
 
 use Yii;
 use frontend\models\Task;
-use frontend\models\search\MyTasksSearch;
+use frontend\modules\account\models\search\TaskSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
-use frontend\models\ChatLog;
 use yii\filters\AccessControl;
-use common\models\TaskSubscriber;
 
 /**
- * MyTasksController implements the CRUD actions for Task model.
+ * TaskController implements the CRUD actions for Task model.
  */
-class MyTasksController extends Controller
+class TaskController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -49,12 +46,8 @@ class MyTasksController extends Controller
      */
     public function actionIndex()
     {
-        if (\Yii::$app->user->isGuest) {
-            return $this->render('for-guest');
-        }
-
-        $searchModel = new MyTasksSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, null);
+        $searchModel = new TaskSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -70,11 +63,8 @@ class MyTasksController extends Controller
      */
     public function actionView($id)
     {
-        $model = $this->findModel($id);
-        $isSubscribed = TaskSubscriber::isSubscribed(\Yii::$app->user->id, $id);
         return $this->render('view', [
-            'model' => $model,
-            'isSubscribed' => $isSubscribed,
+            'model' => $this->findModel($id),
         ]);
     }
 
@@ -86,25 +76,13 @@ class MyTasksController extends Controller
     public function actionCreate()
     {
         $model = new Task();
-        $chatModel = new ChatLog();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $dataForMessage = [
-                'username' => 'Service announcement',
-                'message' => "Task '{$model->name}' with ID {$model->id} was created successfully",
-                'type' => 2,
-                'task_id' => $model->id,
-            ];
-            $chatModel->create($dataForMessage);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        $templates = Task::find()->where(['is_template'=>true])->all();
-        $templates = ArrayHelper::map($templates, 'id', 'name');
-
         return $this->render('create', [
             'model' => $model,
-            'templates' => $templates
         ]);
     }
 
@@ -125,7 +103,6 @@ class MyTasksController extends Controller
 
         return $this->render('update', [
             'model' => $model,
-            'templates'=>[],
         ]);
     }
 
@@ -157,25 +134,5 @@ class MyTasksController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
-    }
-
-    public function actionSubscribe($id)
-    {
-        if (TaskSubscriber::subscribe(\Yii::$app->user->id, $id)) {
-            Yii::$app->session->setFlash('success', 'Subscribed');
-        } else {
-            Yii::$app->session->setFlash('error', 'Error');
-        }
-        $this->redirect(['task/view', 'id' => $id]);
-    }
-
-    public function actionUnsubscribe($id)
-    {
-        if (TaskSubscriber::unsubscribe(\Yii::$app->user->id, $id)) {
-            Yii::$app->session->setFlash('success', 'Subscribed');
-        } else {
-            Yii::$app->session->setFlash('error', 'Error');
-        }
-        $this->redirect(['task/view', 'id' => $id]);
     }
 }
