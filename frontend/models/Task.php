@@ -85,12 +85,15 @@ class Task extends \yii\db\ActiveRecord implements Linkable
     public function attributeLabels()
     {
         return [
+            'template_id' => 'Template',
             'id' => 'ID',
             'name' => 'Name',
             'description' => 'Description',
             'status' => 'Status',
-            'author_id' => 'Author ID',
-            'user_responsible_id' => 'User Responsible ID',
+            'author_id' => 'Author username',
+            'user_responsible_id' => 'User Responsible username',
+            'priority_id' => 'Priority',
+            'project_id' => 'Project title',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

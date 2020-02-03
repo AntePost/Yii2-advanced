@@ -15,9 +15,6 @@ use yii\helpers\ArrayHelper;
  */
 class Priority extends \yii\db\ActiveRecord
 {
-    const TYPE_PROJECT = 1;
-    const TYPE_TASK = 0;
-
     /**
      * {@inheritdoc}
      */
@@ -52,13 +49,14 @@ class Priority extends \yii\db\ActiveRecord
 
     /**
      * @return Priority[]
+     * @param int 0 for tasks, 1 for projects
      */
-    public static function getTaskPriorities()
+    public static function getPriorities($type)
     {
         return ArrayHelper::map(
             self::find()
                 ->where([
-                    'type' => self::TYPE_TASK
+                    'type' => $type
                 ])
                 ->asArray()
                 ->orderBy('order')

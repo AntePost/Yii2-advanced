@@ -22,14 +22,19 @@ use yii\helpers\ArrayHelper;
 
     <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'author_id')->textInput() ?>
+    <?= $form->field($model, 'author_id')
+        ->dropDownList(\common\models\User::getUsers()) ?>
 
-    <?= $form->field($model, 'user_responsible_id')->textInput() ?>
+    <?= $form->field($model, 'user_responsible_id')
+        ->dropDownList(\common\models\User::getUsers()) ?>
 
-    <?= $form->field($model, 'priority')
-        ->dropDownList(\common\models\Priority::getTaskPriorities()) ?>
+    <?= $form->field($model, 'priority_id')
+        ->dropDownList(\common\models\Priority::getPriorities(0)) ?>
 
     <?= $form->field($model, 'status')->dropDownList(\frontend\models\Task::getStatusName()) ?>
+
+    <?= $form->field($model, 'project_id')
+        ->dropDownList(\common\models\Project::getProjects()) ?>
 
     <?= $form->field($model, 'is_template')->checkbox() ?>
 

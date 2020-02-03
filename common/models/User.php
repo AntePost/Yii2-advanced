@@ -6,6 +6,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use yii\helpers\ArrayHelper;
 
 /**
  * User model
@@ -235,5 +236,22 @@ class User extends ActiveRecord implements IdentityInterface
             }
         }
         return parent::beforeSave($insert);
+    }
+
+    /**
+     * @return User[]
+     */
+    public static function getUsers()
+    {
+        return ArrayHelper::map(
+            self::find()
+                ->where([
+                    'status' => self::STATUS_ACTIVE
+                ])
+                ->asArray()
+                ->orderBy('id')
+                ->all(),
+            'id',
+            'username');
     }
 }

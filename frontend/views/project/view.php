@@ -43,12 +43,15 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
+    <?= Html::tag('h1', 'Associated tasks') ?>
+
     <?= GridView::widget([
         'dataProvider' => $taskDataProvider,
         'filterModel' => $taskSearchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'id',
+            'name',
                 [
                     'attribute' => 'author_id',
                     'value' => function (frontend\models\Task $model) {

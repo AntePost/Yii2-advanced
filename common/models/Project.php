@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "project".
@@ -20,12 +22,21 @@ use Yii;
  */
 class Project extends \yii\db\ActiveRecord
 {
+    const STATUS_NEW = 1;
+    const STATUS_IN_PROGRESS = 2;
+    const STATUS_DONE = 3;
+
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
         return 'project';
+    }
+
+    public function behaviors()
+    {
+        return [TimestampBehavior::class => ['class' => TimestampBehavior::class]];
     }
 
     /**
@@ -47,7 +58,7 @@ class Project extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'author_id' => 'Author ID',
+            'author_id' => 'Author username',
             'title' => 'Title',
             'description' => 'Description',
             'priority' => 'Priority',
@@ -68,5 +79,28 @@ class Project extends \yii\db\ActiveRecord
     public function getPriority()
     {
         return $this->hasOne(Priority::class, ['id' => 'priority_id', 'type' => Priority::TYPE_PROJECT]);
+    }
+
+    public static function getStatusName()
+    {
+        return [
+            static::STATUS_NEW => "New",
+            static::STATUS_IN_PROGRESS => "In progress",
+            static::STATUS_DONE => "Done",
+        ];
+    }
+
+    /**
+     * @return Project[]
+     */
+    public static function getProjects()
+    {
+        return ArrayHelper::map(
+            self::find()
+                ->asArray()
+                ->orderBy('id')
+                ->all(),
+            'id',
+            'title');
     }
 }
