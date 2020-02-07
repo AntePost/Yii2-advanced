@@ -166,16 +166,16 @@ class MyTasksController extends Controller
         } else {
             Yii::$app->session->setFlash('error', 'Error');
         }
-        $this->redirect(['task/view', 'id' => $id]);
+        $this->redirect(['my-tasks/view', 'id' => $id]);
     }
 
     public function actionUnsubscribe($id)
     {
         if (TaskSubscriber::unsubscribe(\Yii::$app->user->id, $id)) {
-            Yii::$app->session->setFlash('success', 'Subscribed');
+            Yii::$app->session->setFlash('success', 'Unsubscribed');
         } else {
             Yii::$app->session->setFlash('error', 'Error');
         }
-        $this->redirect(['task/view', 'id' => $id]);
+        $this->redirect(['my-tasks/view', 'id' => $id]);
     }
 }
